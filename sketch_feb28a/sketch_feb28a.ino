@@ -10,6 +10,7 @@ int16_t yAvg [50];
 int16_t zAvg [50];
 int16_t tempx,tempy,tempz=0;
 bool flag =true;
+int timePassed=0;
 void setup() {
   // put your setup code here, to run once:
   Wire.begin();
@@ -61,7 +62,10 @@ void loop() {
 
   if(flag==0){
   steps=steps+1;
+  if(timePassed>=2000){
   displayFunctions(steps);
+  timePassed=0;
+  }
   flag=1;
     threshhold=(maxStep+minStep)/2;
   }
@@ -80,6 +84,7 @@ void loop() {
    if(samplesNo==50){
     samplesNo=0;}
     delay(2);
+    timePassed+=2;
 }
 //called each 2 seconds
 int prevSteps=0;
