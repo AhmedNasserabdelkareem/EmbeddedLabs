@@ -1,3 +1,4 @@
+#include <LiquidCrystal.h>
 #include<Wire.h>
 const int MPU_addr=0x68;  // I2C address of the MPU-6050
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
@@ -11,7 +12,16 @@ int16_t zAvg [50];
 int16_t tempx,tempy,tempz=0;
 bool flag =true;
 int timePassed=0;
+int prevSteps=0;
+float distance=0;
+const float Height = 1.70 ;
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+int turn =1;
+
 void setup() {
+    // set up the LCD's number of columns and rows:
+  lcd.begin(16, 2);
   // put your setup code here, to run once:
   Wire.begin();
   Wire.beginTransmission(MPU_addr);
@@ -87,9 +97,6 @@ void loop() {
     timePassed+=2;
 }
 //called each 2 seconds
-int prevSteps=0;
-float distance=0;
-const float Height = 1.70 ;
 void displayFunctions(int steps){
   int stepsD = steps - prevSteps;
   float ratio =1;
@@ -119,6 +126,29 @@ void displayFunctions(int steps){
   distance += curDistance;
   float vel= distance/2/60;
   float cal= vel * 1.25;
+
+  if(turn ==1 ){
+   lcd.setCursor(0, 1);
+  lcd.print("steps:"+steps);
+  }else if(turn ==2){
+
+    lcd.setCursor(0, 1);
+  lcd.print("D(km):"+String(distance));
+  }else if(turn ==3){
+ lcd.setCursor(0, 1);
+  lcd.print("v(kmH):"+String(vel));
+    
+  }else{
+     lcd.setCursor(0, 1);
+  lcd.print("c(C/kg/h):"+String(cal));
+    turn =0;
+  }
+  turn++;
+  
+
+
+
+  
   Serial.println('\n');
   Serial.print("steps=");
   Serial.println(steps);
@@ -137,3 +167,67 @@ void displayFunctions(int steps){
 
 prevSteps = steps;
 }
+
+
+
+
+
+
+/*
+
+/*
+  LiquidCrystal Library - Hello World
+
+ Demonstrates the use a 16x2 LCD display.  The LiquidCrystal
+ library works with all LCD displays that are compatible with the
+ Hitachi HD44780 driver. There are many of them out there, and you
+ can usually tell them by the 16-pin interface.
+
+ This sketch prints "Hello World!" to the LCD
+ and shows the time.
+
+  The circuit:
+ * LCD RS pin to digital pin 12
+ * LCD Enable pin to digital pin 11
+ * LCD D4 pin to digital pin 5
+ * LCD D5 pin to digital pin 4
+ * LCD D6 pin to digital pin 3
+ * LCD D7 pin to digital pin 2
+ * LCD R/W pin to ground
+ * LCD VSS pin to ground
+ * LCD VCC pin to 5V
+ * 10K resistor:
+ * ends to +5V and ground
+ * wiper to LCD VO pin (pin 3)
+
+ Library originally added 18 Apr 2008
+ by David A. Mellis
+ library modified 5 Jul 2009
+ by Limor Fried (http://www.ladyada.net)
+ example added 9 Jul 2009
+ by Tom Igoe
+ modified 22 Nov 2010
+ by Tom Igoe
+ modified 7 Nov 2016
+ by Arturo Guadalupi
+
+ This example code is in the public domain.
+
+ http://www.arduino.cc/en/Tutorial/LiquidCrystalHelloWorld
+
+
+// include the library code:
+
+// initialize the library by associating any needed LCD interface pin
+// with the arduino pin number it is connected to
+
+void setup() {
+
+}
+
+void loop() {
+  // set the cursor to column 0, line 1
+  // (note: line 1 is the second row, since counting begins with 0):
+ 
+}
+*/
