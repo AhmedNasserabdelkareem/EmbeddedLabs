@@ -86,7 +86,7 @@ int prevSteps=0;
 float distance=0;
 const float Height = 1.70 ;
 void displayFunctions(int steps){
-  stepsD = steps - prevSteps;
+  int stepsD = steps - prevSteps;
   float ratio =1;
   if (stepsD<=2){
     ratio = 5 ;
@@ -110,7 +110,7 @@ void displayFunctions(int steps){
 
   }
 
-  curDistance = stepsD * (Height /ratio );
+  float curDistance = stepsD * (Height /ratio );
   distance += curDistance;
   float vel= distance/2/60;
   float cal= vel * 1.25;
@@ -131,5 +131,4 @@ void displayFunctions(int steps){
   Serial.println(cal);
 
 prevSteps = steps;
-}
 }
