@@ -61,6 +61,7 @@ void loop() {
 
   if(flag==0){
   steps=steps+1;
+  displayFunctions(steps);
   flag=1;
     threshhold=(maxStep+minStep)/2;
   }
@@ -73,12 +74,62 @@ void loop() {
   threshhold=(maxStep+minStep)/2;
   }
   }
-  Serial.println('\n');
-  Serial.print("steps=");
-  Serial.println(steps);
+
 
   samplesNo+=1;
    if(samplesNo==50){
     samplesNo=0;}
     delay(2);
+}
+//called each 2 seconds
+int prevSteps=0;
+float distance=0;
+const float Height = 1.70 ;
+void displayFunctions(int steps){
+  stepsD = steps - prevSteps;
+  float ratio =1;
+  if (stepsD<=2){
+    ratio = 5 ;
+  }else if(stepsD == 3){
+  ratio = 4 ;
+
+  }else if(stepsD == 4){
+  ratio = 3;
+
+  }else if(stepsD == 5){
+
+  ratio =2;
+  }else if(stepsD == 6){
+
+  ratio = 1.2;
+  }else if(stepsD == 7 ||stepsD == 8){
+  ratio = 1;
+
+  }else if(stepsD > 8){
+  ratio = 0.833;
+
+  }
+
+  curDistance = stepsD * (Height /ratio );
+  distance += curDistance;
+  float vel= distance/2/60;
+  float cal= vel * 1.25;
+  Serial.println('\n');
+  Serial.print("steps=");
+  Serial.println(steps);
+
+    Serial.println('\n');
+  Serial.print("Distance(km)=");
+  Serial.println(distance);
+
+     Serial.println('\n');
+  Serial.print("velocity(kmH)=");
+  Serial.println(vel);
+
+     Serial.println('\n');
+  Serial.print("calories(C/kg/h)=");
+  Serial.println(cal);
+
+prevSteps = steps;
+}
 }
